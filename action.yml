@@ -1,0 +1,41 @@
+---
+name: Check Links
+
+description: Recursively crawls links and checks if they are reachable
+
+author: Paul Schuberth
+
+branding:
+  color: blue
+  icon: link
+
+inputs:
+  start-url:
+    required: true
+    description: The url from which this action starts to crawl
+  broken-link-message:
+    required: false
+    description: The message shown for each broken link
+    default: 'broken link!'
+
+runs:
+  using: composite
+  steps:
+  - name: Crawl Website
+    shell: bash
+    run: wget --spider --recursive --no-directories --no-verbose --output-file linktest.log ${{ inputs.start-url }} || true
+
+  - name: Inspect Wget log
+    shell: bash
+    run: grep -B1 '${{ inputs.broken-link-message }}' linktest.log > testresult.log || true
+
+  - name: Display results
+    shell: bash
+    run: |
+      if [[ -s testresult.log ]]; then
+        cat testresult.log
+        exit 1
+      else
+        echo "All links work!"
+        exit 0
+      fi
