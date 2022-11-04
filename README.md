@@ -7,7 +7,7 @@ on a page a reachable.
 
 ```yaml
       - name: Check Links
-        uses: paulschuberth/check-links-action@main
+        uses: paulschuberth/check-links-action@v1
         with:
           # Required: The Url from which wget starts to crawl the website
           start-url: 'http://localhost:1313'
